@@ -14,6 +14,7 @@
 		<java.version>1.8</java.version>
 		<auto-value.version>1.4.1</auto-value.version>
 		<javax-persistence.version>1.0</javax-persistence.version>
+		<model-mapper.version>1.1.0</model-mapper.version>
 	</properties>
 
 	<parent>
@@ -29,6 +30,16 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-jersey</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+
+		<dependency>
 			<groupId>com.google.auto.value</groupId>
 			<artifactId>auto-value</artifactId>
 			<version>${auto-value.version}</version>
@@ -41,6 +52,16 @@
 			<version>${javax-persistence.version}</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.modelmapper</groupId>
+			<artifactId>modelmapper</artifactId>
+			<version>${model-mapper.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+		</dependency>
 
 		<!-- Test dependencies -->
 		<dependency>

@@ -1,27 +1,29 @@
 package com.thestick.domain;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
+@Table(name="comments")
 public class Comment {
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy=GenerationType.AUTO)
 	private long id;
+	private long threadId;
 	private String username;
-	private LocalDateTime timestamp;
 	private String contents;
-	private UUID threadId;
+	private LocalDateTime timestamp;
 	
-	Comment() {
+	protected Comment() {
 		
 	}
 	
-	public Comment(String username, LocalDateTime timestamp, String contents, UUID threadId) {
+	public Comment(String username, LocalDateTime timestamp, String contents, long threadId) {
 		this.username = username;
 		this.timestamp = timestamp;
 		this.contents = contents;
@@ -40,7 +42,11 @@ public class Comment {
 		return contents;
 	}
 
-	public UUID getThreadId() {
+	public long getThreadId() {
 		return threadId;
+	}
+	
+	public long getId() {
+		return id;
 	}
 }

@@ -8,14 +8,14 @@ import com.google.auto.value.AutoValue;
 
 @AutoValue
 public abstract class Comment {
-	@JsonProperty("id") public abstract long id();
-	@JsonProperty("user") public abstract String username();
-	@JsonProperty("thread") public abstract LocalDateTime timestamp();
-	@JsonProperty("contents") public abstract String contents();
-	@JsonProperty("threadId") public abstract long threadId();
+	@JsonProperty("id") public abstract long getId();
+	@JsonProperty("username") public abstract String getUsername();
+	@JsonProperty("created") public abstract LocalDateTime getTimestamp();
+	@JsonProperty("contents") public abstract String getContents();
+	@JsonProperty("commentThreadId") public abstract long getCommentThreadId();
 	
 	@JsonCreator
-	public static Comment create(long id, String username, LocalDateTime timestamp, String contents, long threadId) {
-		return new AutoValue_Comment(id, username, timestamp, contents, threadId);
+	public static Comment create(long id, String username, LocalDateTime timestamp, String contents, long commentThreadId) {
+		return new AutoValue_Comment(id, username, timestamp, contents, commentThreadId);
 	}
 }

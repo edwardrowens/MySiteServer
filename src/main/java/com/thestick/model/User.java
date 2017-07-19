@@ -7,11 +7,10 @@ import com.google.auto.value.AutoValue;
 @AutoValue
 public abstract class User {
 	@JsonProperty("username") public abstract String getUsername();
-	@JsonProperty("hash") public abstract String getHash();
-	@JsonProperty("salt") public abstract String getSalt();
+	@JsonProperty("token") public abstract String getToken();
 	
 	@JsonCreator
-	public static User create(String username, String hash, String salt) {
-		return new AutoValue_User(username, hash, salt);
+	public static User create(String username, String token) {
+		return new AutoValue_User(username, token);
 	}
 }

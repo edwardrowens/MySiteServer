@@ -3,6 +3,7 @@ package com.thestick.resource;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -38,16 +39,15 @@ public class UserResource {
 	}
 	
 	@PUT
-	@Path("/login")
-	public Response login(LoginRequestPayload loginRequestPayload) {
+	@Path("/{username}/login")
+	public Response login(@PathParam("username") String username, LoginRequestPayload loginRequestPayload) {
 		boolean auth = false;
 		try {
-			auth = userService.authenticateUser(loginRequestPayload.getUsername(), loginRequestPayload.getPassword());
+			auth = userService.authenticateUser(username, loginRequestPayload.getPassword());
 		} catch (IllegalArgumentException e) {
 			return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
 		}
-		Status status = auth ? Status.OK : Status.BAD_REQUEST;
-		return Response.status(status).build();
+		return Response.status(auth ? Status.OK : Status.BAD_REQUEST).build();
 	}
 	
 }

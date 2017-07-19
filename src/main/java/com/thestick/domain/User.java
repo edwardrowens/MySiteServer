@@ -9,27 +9,20 @@ import javax.persistence.Table;
 public class User {
 	@Id
 	private String username;
-	private String hash;
-	private String salt;
+	private String token;
 	
 	protected User() {}
 	
-	public User(String username, String hash, String salt) {
+	public User(String username, String token) {
 		this.username = username;
-		this.hash = hash;
-		this.salt = salt;
+		this.token = token;
 	}
 
 	public String getUsername() {
 		return username;
 	}
 
-	public String getHash() {
-		return hash;
-	}
-
-
-	public String getSalt() {
-		return salt;
+	public String getToken() {
+		return token;
 	}
 }

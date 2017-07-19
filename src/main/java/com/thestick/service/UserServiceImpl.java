@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.common.base.Preconditions;
-import com.thestick.model.SaltHash;
 import com.thestick.model.User;
 import com.thestick.repository.UsersRepository;
 
@@ -28,16 +27,16 @@ public class UserServiceImpl implements UserService {
 	public User createUser(String username, char[] password) {
 		com.thestick.domain.User user = usersRepository.findByUsername(username);
 		Preconditions.checkArgument(user == null, "Username is taken");
-		SaltHash saltHash = securityService.hashPassword(password);
-		usersRepository.save(new com.thestick.domain.User(username, saltHash.getHash(), saltHash.getSalt()));
-		return User.create(username, saltHash.getHash(), saltHash.getSalt());
+		String token = securityService.hashPassword(password);
+		usersRepository.save(new com.thestick.domain.User(username, token));
+		return User.create(username, token);
 	}
 
 	@Override
 	public boolean authenticateUser(String username, char[] password) {
 		com.thestick.domain.User user = usersRepository.findByUsername(username);
 		Preconditions.checkArgument(user != null, "User does not exist");
-		return securityService.authenticate(password, SaltHash.create(user.getSalt(), user.getHash()));
+		return securityService.authenticate(password, user.getToken());
 	}
 
 }

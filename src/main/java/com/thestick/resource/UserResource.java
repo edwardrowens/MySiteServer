@@ -9,6 +9,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.thestick.model.User;
@@ -18,6 +20,7 @@ import com.thestick.service.UserService;
 
 @Path("/users")
 public class UserResource {
+	private static Logger logger = LoggerFactory.getLogger(UserResource.class);
 	
 	private final UserService userService;
 
@@ -41,13 +44,22 @@ public class UserResource {
 	@PUT
 	@Path("/{username}/login")
 	public Response login(@PathParam("username") String username, LoginRequestPayload loginRequestPayload) {
+		logger.info("<{}> is attempting to log in", username);
 		boolean auth = false;
 		try {
 			auth = userService.authenticateUser(username, loginRequestPayload.getPassword());
 		} catch (IllegalArgumentException e) {
+			logger.error("Invalid arguments for login attempt for <{}>", username, e);
 			return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
 		}
-		return Response.status(auth ? Status.OK : Status.BAD_REQUEST).build();
+		Status status;
+		if (auth) {
+			logger.info("<{}> login attempt was successful", username);
+			status = Status.OK;
+		} else {
+			logger.info("<{}> login attempt was unsuccessful", username);
+			status = Status.BAD_REQUEST;
+		}
+		return Response.status(status).build();
 	}
-	
 }

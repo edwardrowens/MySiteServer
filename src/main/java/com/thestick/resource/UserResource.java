@@ -1,7 +1,6 @@
 package com.thestick.resource;
 
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -41,7 +40,7 @@ public class UserResource {
 		return Response.ok(user).build();
 	}
 	
-	@PUT
+	@POST
 	@Path("/{username}/login")
 	public Response login(@PathParam("username") String username, LoginRequestPayload loginRequestPayload) {
 		logger.info("<{}> is attempting to log in", username);

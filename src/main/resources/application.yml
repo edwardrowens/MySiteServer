@@ -1,6 +1,6 @@
 logging:
   level:
-    org.springframework.web: ERROR
+    org.springframework.web: INFO
     com.thestick: INFO
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
@@ -19,3 +19,12 @@ spring:
     username: postgres
     password: 1234
     driverClassName: org.postgresql.Driver
+  resources:
+    static-locations: classpath:/public/
+  jersey:
+    type: filter
+server:
+  port: 80
+  ssl:
+    enabled: false
+    key-alias: tomcat

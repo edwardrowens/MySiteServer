@@ -11,16 +11,21 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.thestick.model.CommentThread;
+import com.thestick.model.ErrorResponsePayload;
 import com.thestick.resource.request.CreateCommentThreadRequestPayload;
 import com.thestick.resource.response.CreateCommentThreadResponsePayload;
 import com.thestick.service.CommentThreadService;
 
 @Path("/threads")
 public class CommentThreadResource {
-
+	
+	private static final Logger logger = LoggerFactory.getLogger(CommentThreadResource.class.getName());
+	
 	private final CommentThreadService commentThreadService;
 
 	@Autowired
@@ -31,20 +36,31 @@ public class CommentThreadResource {
 	@GET
 	@Path("/{commentThreadId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public CommentThread retrieveCommentThread(@PathParam("commentThreadId") long commentThreadId) {
-		return commentThreadService.retrieveCommentThread(commentThreadId);
+	public Response retrieveCommentThread(@PathParam("commentThreadId") long commentThreadId) {
+		logger.info("Retrieving comment thread with ID <{}>", commentThreadId);
+		try {
+			CommentThread commentThread =  commentThreadService.retrieveCommentThread(commentThreadId);
+			logger.info("Sending comment thread <{}>", commentThread);
+			return  Response.ok(commentThread).build();
+		} catch (IllegalArgumentException e) {
+			logger.info("Could not find comment thread with ID <{}>", commentThreadId);
+			return Response.status(Status.NOT_FOUND).entity(ErrorResponsePayload.create("Invalid thread ID")).build();
+		}
 	}
 
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response createCommentThread(CreateCommentThreadRequestPayload request) {
 		CommentThread commentThread = CommentThread.create(0, LocalDateTime.now(), request.getCreator());
+		logger.info("Creating comment thread <{}>", commentThread);
 		long commentThreadId;
 		try {
 			commentThreadId = commentThreadService.createCommentThread(commentThread);
 		} catch (IllegalArgumentException e) {
-			return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+			logger.info("Could not creat comment thread due to <{}>", e.getMessage());
+			return Response.status(Status.BAD_REQUEST).entity(ErrorResponsePayload.create(e.getMessage())).build();
 		}
+		logger.info("Created comment thread <{}>", commentThread);
 		return Response.ok(CreateCommentThreadResponsePayload.create(commentThreadId)).build();
 	}
 }
